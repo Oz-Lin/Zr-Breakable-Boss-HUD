@@ -32,7 +32,7 @@
 #define PLUGIN_NAME           "Boss_Hud"
 #define PLUGIN_AUTHOR         "Anubis"
 #define PLUGIN_DESCRIPTION    "Shows the func_physbox/func_physbox_multiplayer/func_breakable/math_counter you are shooting at"
-#define PLUGIN_VERSION        "1.0"
+#define PLUGIN_VERSION        "1.1"
 #define PLUGIN_URL            "https://github.com/Stewart-Anubis"
 
 #include <sourcemod>
@@ -634,7 +634,6 @@ public int MenuAdminBhudCallBack(Handle MenuBhudAdmin, MenuAction action, int cl
 			SendConVarValue(client, g_hmp_maxmoney, g_sValue_mp_maxmoney);
 			SendConVarValue(client, g_hsv_disable_radar, g_sValue_sv_disable_radar);
 		}
-		KvRewind(g_hkvbosshpAdmin);
 	}
 
 	if (itemNum == MenuCancel_ExitBack)
@@ -656,24 +655,26 @@ public void OnClientConnected(int client)
 	}
 }
 
-public void OnHealthChanged(const char[] output, int Centity, int activator, float delay)
+public void OnEntityCreated(int entity, const char[] classname)
 {
-	if (IsValidClient(activator) && IsValidEntity(Centity))
+	if(StrEqual(classname, "func_physbox", false) || StrEqual(classname, "func_physbox_multiplayer", false) || StrEqual(classname, "func_breakable", false))
 	{
-		if(g_hkvbosshp == INVALID_HANDLE)
-		{
-			ReadFileBoss();
-		}
+		if (IsValidEntity(entity))	SDKHook(entity, SDKHook_OnTakeDamage, OnTakeDamage);
+	}
+}
 
+public void OnHealthChanged(const char[] output, int entity, int activator, float delay)
+{
+	if (IsValidClient(activator) && IsValidEntity(entity))
+	{
 		char targetname[MAX_TEXT_LENGTH];
 		char bossname[MAX_TEXT_LENGTH];
 		char hammerID[MAX_TEXT_LENGTH];
-		int HPvalue;
 
-		GetEntPropString(Centity, Prop_Data, "m_iName", targetname, sizeof(targetname));
-		HPvalue = GetEntProp(Centity, Prop_Data, "m_iHealth");
+		GetEntPropString(entity, Prop_Data, "m_iName", targetname, sizeof(targetname));
+		int HPvalue = GetEntProp(entity, Prop_Data, "m_iHealth");
 
-		int hammerIDi = GetEntProp(Centity, Prop_Data, "m_iHammerID");
+		int hammerIDi = GetEntProp(entity, Prop_Data, "m_iHammerID");
 		IntToString(hammerIDi, hammerID, sizeof(hammerID));
 
 		if(strlen(targetname) == 0) targetname = "No-Name";
@@ -683,84 +684,28 @@ public void OnHealthChanged(const char[] output, int Centity, int activator, flo
 		{
 			PrintToChat(activator, " \x04[Boss_HUD] Breakable: \x01%s  \x04HammerID: \x01%d  \x04HP: \x01%d\x04.", targetname, hammerIDi, HPvalue);
 		}
-
-		if(!KvJumpToKey(g_hkvbosshp, hammerID))
-		{
-			KvRewind(g_hkvbosshp);
-			KvJumpToKey(g_hkvbosshp, hammerID, true);
-			if(HPvalue >= 0 && HPvalue <= 900000) KvSetNum(g_hkvbosshp, "enabled", 1);
-			else KvSetNum(g_hkvbosshp, "enabled", 0);
-			KvSetString(g_hkvbosshp, "hammerid", hammerID);
-			KvSetString(g_hkvbosshp, "m_iname", bossname);
-			KvSetNum(g_hkvbosshp, "HPvalue_max", HPvalue);
-			KvRewind(g_hkvbosshp);
-			KeyValuesToFile(g_hkvbosshp, g_sPathFileBoss);
-			KvRewind(g_hkvbosshpAdmin);
-			KvCopySubkeys(g_hkvbosshp, g_hkvbosshpAdmin);
-			KvJumpToKey(g_hkvbosshp, hammerID);
-		}
-
-		if (KvGetNum(g_hkvbosshp, "enabled") <= 0 || !g_bBossHud)
-		{
-			KvRewind(g_hkvbosshp);
-			return;
-		}
+		if(HPvalue <= 0 && HPvalue >= -20) HPvalue = 0;
 
 		if(HPvalue >= 0 && HPvalue <= 900000)
 		{
-			if (hammerIDi != BossHudClientEnum[activator].e_iHammerID)
-			{
-				char szString[MAX_TEXT_LENGTH];
-				int HPvalue_MAX = KvGetNum(g_hkvbosshp, "HPvalue_max");
-				KvGetString(g_hkvbosshp, "m_iname", szString, sizeof(szString), bossname);
-				strcopy(BossHudClientEnum[activator].e_sName, MAX_TEXT_LENGTH, szString);
-				BossHudClientEnum[activator].e_iHPvalue_Max = HPvalue_MAX;
-				BossHudClientEnum[activator].e_iEntityID = Centity;
-			}
-			KvRewind(g_hkvbosshp);
-
-			int HPpercent = RoundFloat(float(HPvalue)/float(BossHudClientEnum[activator].e_iHPvalue_Max)*100.0);
-
-			char sTextBar[MAX_TEXT_LENGTH];
-			Format(sTextBar, sizeof(sTextBar), "%s", CreateIcon(HPpercent));
-
-			BossHudClientEnum[activator].e_iHammerID = StringToInt(hammerID);
-			strcopy(BossHudClientEnum[activator].e_sTextBar, MAX_TEXT_LENGTH, sTextBar);
-			BossHudClientEnum[activator].e_iHPvalue = HPvalue;
-			BossHudClientEnum[activator].e_iHPpercent = HPpercent;
-			if (BossHudClientEnum[activator].e_bHpBrEnable)
-			{
-				SendCenterMsg(activator, BossHudClientEnum[activator].e_sName, sTextBar, HPvalue, HPpercent);
-				BossHudClientEnum[activator].e_iTimer = GetTime();
-			}
-			if (BossHudClientEnum[activator].e_bHitmEnable)
-			{
-				SetHudTextParams(-1.0, -1.0, 0.1, 255, 0, 0, 0, 0, 6.0, 0.0, 0.0);
-				ShowHudText(activator, 5, "X");
-			}
+			BossHudDamage(entity, activator, HPvalue, bossname, hammerID, hammerIDi);
 		}
 	}
 }
 
-public void CounterOutValue(const char[] output, int Centity, int activator, float delay)
+public void CounterOutValue(const char[] output, int entity, int activator, float delay)
 {
-	if (IsValidClient(activator) && (IsValidEntity(Centity) || IsValidEdict(Centity)))
+	if (IsValidClient(activator) && (IsValidEntity(entity) || IsValidEdict(entity)))
 	{
-		if(g_hkvbosshp == INVALID_HANDLE)
-		{
-			ReadFileBoss();
-		}
-
 		char hammerID[MAX_TEXT_LENGTH];
 		char targetname[MAX_TEXT_LENGTH];
 		char bossname[MAX_TEXT_LENGTH];
-		int HPvalue;
 
-		int hammerIDi = GetEntProp(Centity, Prop_Data, "m_iHammerID");
+		int hammerIDi = GetEntProp(entity, Prop_Data, "m_iHammerID");
 		IntToString(hammerIDi, hammerID, sizeof(hammerID));
 		
-		GetEntPropString(Centity, Prop_Data, "m_iName", targetname, sizeof(targetname));
-		HPvalue = RoundToNearest(GetEntDataFloat(Centity, FindDataMapInfo(Centity, "m_OutValue")));
+		GetEntPropString(entity, Prop_Data, "m_iName", targetname, sizeof(targetname));
+		int HPvalue = RoundToNearest(GetEntDataFloat(entity, FindDataMapInfo(entity, "m_OutValue")));
 		
 		if(strlen(targetname) == 0) targetname = "No-Name";
 		Format(bossname, sizeof(bossname), "►[BOSS %s]◄", targetname);
@@ -769,12 +714,71 @@ public void CounterOutValue(const char[] output, int Centity, int activator, flo
 		{
 			PrintToChat(activator, " \x04[Boss_HUD] MathCounter: \x01%s  \x04HammerID: \x01%d  \x04HP: \x01%d\x04.", targetname, hammerIDi, HPvalue);
 		}
+		if(HPvalue <= 0 && HPvalue >= -20) HPvalue = 0;
+
+		if(HPvalue >= 0 && HPvalue <= 900000)
+		{
+			BossHudDamage(entity, activator, HPvalue, bossname, hammerID, hammerIDi, true);
+		}
+	}
+}
+
+public Action OnTakeDamage (int entity, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3])
+{
+	if (IsValidEntity(entity) && IsValidEdict(entity) && IsValidClient(attacker))
+	{
+		char hammerID[MAX_TEXT_LENGTH];
+		char targetname[MAX_TEXT_LENGTH];
+		char bossname[MAX_TEXT_LENGTH];
+		char szType[MAX_TEXT_LENGTH];
+		bool b_temp = false;
+
+		int hammerIDi = GetEntProp(entity, Prop_Data, "m_iHammerID");
+		IntToString(hammerIDi, hammerID, sizeof(hammerID));
+		GetEntityClassname(entity, szType, sizeof(szType));
+		
+		GetEntPropString(entity, Prop_Data, "m_iName", targetname, sizeof(targetname));
+		int HPvalue;
+
+		if(strlen(targetname) == 0) targetname = "No-Name";
+
+		if(StrEqual(szType, "math_counter", false))
+		{
+			HPvalue = RoundToNearest(GetEntDataFloat(entity, FindDataMapInfo(entity, "m_OutValue")));
+			Format(bossname, sizeof(bossname), "►[BOSS %s]◄", targetname);
+			b_temp = true;
+		}
+		else
+		{
+			HPvalue = GetEntProp(entity, Prop_Data, "m_iHealth");
+			Format(bossname, sizeof(bossname), "►[%s]◄", targetname);
+			b_temp = false;
+		}
+		if(HPvalue <= 0 && HPvalue >= -20) HPvalue = 0;
+
+		if(HPvalue >= 0 && HPvalue <= 900000)
+		{
+			BossHudDamage(entity, attacker, HPvalue, bossname, hammerID, hammerIDi, b_temp);
+		}
+	}
+}
+
+void BossHudDamage(int entity, int attacker, int HPvalue, char[] bossname, char[] hammerID, int hammerIDi, bool math_counter = false)
+{
+	if (IsValidClient(attacker))
+	{
+		if(g_hkvbosshp == INVALID_HANDLE)
+		{
+			ReadFileBoss();
+			return;
+		}
+		KvRewind(g_hkvbosshp);
 
 		if(!KvJumpToKey(g_hkvbosshp, hammerID))
 		{
 			KvRewind(g_hkvbosshp);
 			KvJumpToKey(g_hkvbosshp, hammerID, true);
-			if(HPvalue >= 0 && HPvalue <= 900000) KvSetNum(g_hkvbosshp, "enabled", 1);
+			if(HPvalue >= 1 && HPvalue <= 900000) KvSetNum(g_hkvbosshp, "enabled", 1);
 			else KvSetNum(g_hkvbosshp, "enabled", 0);
 			KvSetString(g_hkvbosshp, "hammerid", hammerID);
 			KvSetString(g_hkvbosshp, "m_iname", bossname);
@@ -792,42 +796,42 @@ public void CounterOutValue(const char[] output, int Centity, int activator, flo
 			return;
 		}
 
-		if(HPvalue >= 0 && HPvalue <= 900000)
+		if (hammerIDi != BossHudClientEnum[attacker].e_iHammerID)
 		{
-			if (hammerIDi != BossHudClientEnum[activator].e_iHammerID)
-			{
-				char szString[MAX_TEXT_LENGTH];
-				int HPvalue_MAX = KvGetNum(g_hkvbosshp, "HPvalue_max");
-				KvGetString(g_hkvbosshp, "m_iname", szString, sizeof(szString), bossname);
-				strcopy(BossHudClientEnum[activator].e_sName, MAX_TEXT_LENGTH, szString);
-				BossHudClientEnum[activator].e_iHPvalue_Max = HPvalue_MAX;
-				BossHudClientEnum[activator].e_iEntityID = Centity;
-			}
-			KvRewind(g_hkvbosshp);
+			char szString[MAX_TEXT_LENGTH];
+			int HPvalue_MAX = KvGetNum(g_hkvbosshp, "HPvalue_max");
+			KvGetString(g_hkvbosshp, "m_iname", szString, sizeof(szString), bossname);
+			strcopy(BossHudClientEnum[attacker].e_sName, MAX_TEXT_LENGTH, szString);
+			BossHudClientEnum[attacker].e_iHPvalue_Max = HPvalue_MAX;
+			BossHudClientEnum[attacker].e_iEntityID = entity;
+		}
+		KvRewind(g_hkvbosshp);
 
-			int HPpercent = RoundFloat(float(HPvalue)/float(BossHudClientEnum[activator].e_iHPvalue_Max)*100.0);
+		int HPpercent = RoundFloat(float(HPvalue)/float(BossHudClientEnum[attacker].e_iHPvalue_Max)*100.0);
 
-			char sTextBar[MAX_TEXT_LENGTH];
-			Format(sTextBar, sizeof(sTextBar), "%s", CreateIcon(HPpercent));
+		char sTextBar[MAX_TEXT_LENGTH];
+		Format(sTextBar, sizeof(sTextBar), "%s", CreateIcon(HPpercent));
 
-			BossHudClientEnum[activator].e_iHammerID = StringToInt(hammerID);
-			strcopy(BossHudClientEnum[activator].e_sTextBar, MAX_TEXT_LENGTH, sTextBar);
-			BossHudClientEnum[activator].e_iHPvalue = HPvalue;
-			BossHudClientEnum[activator].e_iHPpercent = HPpercent;
-			g_iTop_Rank_Dmg[activator] += 1;
-			if (BossHudClientEnum[activator].e_bHpBhEnable)
-			{
-				SendCenterMsg(activator, BossHudClientEnum[activator].e_sName, sTextBar, HPvalue, HPpercent);
-				BossHudClientEnum[activator].e_iTimer = GetTime();
-			}
+		BossHudClientEnum[attacker].e_iHammerID = StringToInt(hammerID);
+		strcopy(BossHudClientEnum[attacker].e_sTextBar, MAX_TEXT_LENGTH, sTextBar);
+		BossHudClientEnum[attacker].e_iHPvalue = HPvalue;
+		BossHudClientEnum[attacker].e_iHPpercent = HPpercent;
+		if (BossHudClientEnum[attacker].e_bHpBrEnable)
+		{
+			SendCenterMsg(attacker, BossHudClientEnum[attacker].e_sName, sTextBar, HPvalue, HPpercent);
+			BossHudClientEnum[attacker].e_iTimer = GetTime();
+		}
+		if (math_counter)
+		{
 			g_iVUTopRankTimer = GetTime();
 			g_bBossDestroy = true;
+			g_iTop_Rank_Dmg[attacker]+= 1;
+		}
 
-			if (BossHudClientEnum[activator].e_bHitmEnable)
-			{
-				SetHudTextParams(-1.0, -1.0, 0.1, 255, 0, 0, 0, 0, 6.0, 0.0, 0.0);
-				ShowHudText(activator, 5, "X");
-			}
+		if (BossHudClientEnum[attacker].e_bHitmEnable)
+		{
+			SetHudTextParams(-1.0, -1.0, 0.1, 255, 0, 0, 0, 0, 6.0, 0.0, 0.0);
+			ShowHudText(attacker, 5, "X");
 		}
 	}
 }
@@ -891,8 +895,9 @@ public Action UpdateHUD(Handle timer, any client)
 			{
 				HPvalue = GetEntProp(BossHudClientEnum[i].e_iEntityID, Prop_Data, "m_iHealth");
 			}
+			if(HPvalue <= 0 && HPvalue >= -20) HPvalue = 0;
 
-			if(HPvalue <= 0 || HPvalue >= 900000)
+			if(HPvalue < 0 || HPvalue >= 900000)
 			{
 				continue;
 			}

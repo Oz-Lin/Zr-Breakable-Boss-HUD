@@ -4,7 +4,7 @@
 * Sorry for my English.
 
 * Author Anubis.
-* Version = 2.0
+* Version = 1.1
 
 ### Zr-Breakable-Boss-HUD
 Displays the health / value of any func_breakable or math_counter that you activate.
