@@ -2,13 +2,9 @@
 {
 	"Boss Hud Title"
 	{
-		"en"		"Boss Hud Anubis\n "
-		"pt"		"Boss Hud Anubis\n "
-	}
-	"Boss Hud Admin Title"
-	{
-		"en"		"Boss Hud Admin\n "
-		"pt"		"Boss Hud Admin\n "
+		"#format"		"{1:s},{2:s},{3:s},{4:s},{5:s}"
+		"en"		"Boss Hud Anubis\n \nBoss Hud Damage: [{1}]\nBrekable Hud: [{2}]\nBoss Hit Marker: [{3}]\nHit Sounds: [{4}]\nZombies Hud Hits: [{5}]\n "
+		"pt"		"Boss Hud Anubis\n \nDanos Boss na Tela: [{1}]\nQuebra de Itens na Tela: [{2}]\nAuxílio de mira: [{3}]\nSons dos Hits: [{4}]\nMostar Danos aõs Zuimbis: [{5}]\n "
 	}
 	"Boss Hud Damage"
 	{
@@ -18,75 +14,22 @@
 	"Brekable Hud"
 	{
 		"en"		"Brekable Hud"
-		"pt"		"Hp Itens ão Quebrar"
-	}
-	"Boss Hud Type"
-	{
-		"en"		"Display type"
-		"pt"		"Tipo de visor"
+		"pt"		"Quebra de Itens na Tela"
 	}
 	"Boss Hit Marker"
 	{
 		"en"		"Boss Hit Marker"
 		"pt"		"Auxílio de mira"
 	}
-	"Boss Top Rank"
+	"Zombies Hit Sounds"
 	{
-		"en"		"Boss Top Rank"
-		"pt"		"Top Rank Boss"
+		"en"		"Hit Sounds"
+		"pt"		"Sons dos Hits"
 	}
-	"Boss Hud Position"
+	"Zombies Hud Hits"
 	{
-		"en"		"Hud position"
-		"pt"		"Posição do Hud"
-	}
-	"Change Hud Position"
-	{
-		"#format"		"{1:s}"
-		"en"		" {lightred}[{lightgreen}Boss_HUD{lightred}] < {lightgreen}Current value: {yellow}{1} {lightgreen}Default: {yellow}-1.0 0.775 {lightred}> {default}Type the new position of Hud in the chat and [ENTER] or type {lightgreen}!cancel {default}to cancel."
-		"pt"		" {lightred}[{lightgreen}Boss_HUD{lightred}] < {lightgreen}Valor Atual: {yellow}{1} {lightgreen}Padrão: {yellow}-1.0 0.775 {lightred}> {default}Digite a nova posiçao do Hud no chat e de [ENTER] ou digite {lightgreen}!cancel {default}para cancelar."
-	}
-	"Boss Hud Title Admin Disabled"
-	{
-		"#format"	"{1:s},{2:d},{3:d}"
-		"en"		"Boss Hud Admin\n \nM_Iname: {1} [Disabled]\nHammerID: {2}\nHPvalue_max: {3}\n "
-		"pt"		"Boss Hud Admin\n \nM_Iname: {1} [Desativado]\nHammerID: {2}\nHPvalue_max: {3}\n "
-	}
-	"Boss Hud Title Admin Enabled"
-	{
-		"#format"	"{1:s},{2:d},{3:d}"
-		"en"		"Boss Hud Admin\n \nM_Iname: {1} [Enabled]\nHammerID: {2}\nHPvalue_max: {3}\n "
-		"pt"		"Boss Hud Admin\n \nM_Iname: {1} [Ativado]\nHammerID: {2}\nHPvalue_max: {3}\n "
-	}
-	"Change Boss Name"
-	{
-		"en"		"Change Boss Name"
-		"pt"		"Alterar o Nome do Boss"
-	}
-	"Change Boss Max_Hp"
-	{
-		"en"		"Change Boss Max_Hp"
-		"pt"		"Alterar Max_Hp do Boss"
-	}
-	"Center"
-	{
-		"en"		"Center"
-		"pt"		"Informações"
-	}
-	"Display Hud"
-	{
-		"en"		"Hud"
-		"pt"		"Hud"
-	}
-	"Enable"
-	{
-		"en"		"Enable"
-		"pt"		"Habilitar"
-	}
-	"Desable"
-	{
-		"en"		"Desable"
-		"pt"		"Desabilitar"
+		"en"		"Zombies Hud Hits"
+		"pt"		"Mostar Danos aõs Zuimbis"
 	}
 	"Enabled"
 	{
@@ -98,39 +41,29 @@
 		"en"		"Desabled"
 		"pt"		"Desativado"
 	}
-	"No entity found"
+	"Health added"
 	{
-		"en"		" {lightred}[{lightgreen}Boss_HUD{lightred}]{default} No entity found, wait for the file to be created."
-		"pt"		" {lightred}[{lightgreen}Boss_HUD{lightred}]{default} Nenhuma entidade encontrada, aguarde a criação do arquivo."
+		"#format"	"{1:d},{2:d},{3:d}"
+		"en"		" {lightred}[{lightgreen}Boss_HUD{lightred}] {lightgreen}{1}{default} health added. ({lightgreen}{2}{default} HP to {lightgreen}{3}{default} HP)."
+		"pt"		" {lightred}[{lightgreen}Boss_HUD{lightred}] {lightgreen}{1}{default} hp adcionado. ({lightgreen}{2}{default} HP para {lightgreen}{3}{default} HP)."
 	}
-	"Rename the entity"
+	"Health subtracted"
 	{
-		"#format"	"{1:s}"
-		"en"		" {lightred}[{lightgreen}Boss_HUD{lightred}] < {lightgreen}Current value: {yellow}{1} {lightred}> {default}Type the new name of the Entity in the chat and [ENTER] or type {lightgreen}!cancel {default}to cancel."
-		"pt"		" {lightred}[{lightgreen}Boss_HUD{lightred}] < {lightgreen}Valor Atual: {yellow}{1} {lightred}> {default}Digite o novo nome da Entidade no chat e de [ENTER] ou digite {lightgreen}!cancel {default}para cancelar."
+		"#format"	"{1:d},{2:d},{3:d}"
+		"en"		" {lightred}[{lightgreen}Boss_HUD{lightred}] {lightgreen}{1}{default} health subtracted. ({lightgreen}{2}{default} HP to {lightgreen}{3}{default} HP)."
+		"pt"		" {lightred}[{lightgreen}Boss_HUD{lightred}] {lightgreen}{1}{default} hp retirado. ({lightgreen}{2}{default} HP para {lightgreen}{3}{default} HP)."
 	}
-	"Change Entity Hp_Max"
+	"Change Entity Hp"
 	{
-		"#format"	"{1:d}"
-		"en"		" {lightred}[{lightgreen}Boss_HUD{lightred}] < {lightgreen}Current value: {yellow}{1} {lightred}> {default}Enter the Entity's new Hp_Max in the chat and [ENTER] or type {lightgreen}!cancel {default}to cancel."
-		"pt"		" {lightred}[{lightgreen}Boss_HUD{lightred}] < {lightgreen}Valor Atual: {yellow}{1} {lightred}> {default}Digite o novo Hp_Max da Entidade no chat e de [ENTER] ou digite {lightgreen}!cancel {default}para cancelar."
+		"#format"	"{1:s},{2:d},{3:s},{4:d}"
+		"en"		" {lightred}[{lightgreen}Boss_HUD{lightred}]{default} Entity {lightgreen}{1} {yellow}{2}{default} ({lightgreen}{3}): {yellow}{4} HP"
+		"pt"		" {lightred}[{lightgreen}Boss_HUD{lightred}]{default} Entidade {lightgreen}{1} {yellow}{2}{default} ({lightgreen}{3}): {yellow}{4} HP"
 	}
 	"Invalid Entity"
 	{
-		"#format"	"{1:s}"
+		"#format"	"{1:d}"
 		"en"		" {lightred}[{lightgreen}Boss_HUD{lightred}]{default} The entity (ID {lightgreen}{1}{default}) is invalid, use {lightgreen}!hpdebug {default}to obtain the {lightgreen}HamerId {default}of the Entities."
 		"pt"		" {lightred}[{lightgreen}Boss_HUD{lightred}]{default} A entidade (ID {lightgreen}{1}{default}) é inválida , use  {lightgreen}!hpdebug {default}para obter o {lightgreen}HamerId {default}das Entidades."
-	}
-	"You Points"
-	{
-		"#format"	"{1:N},{2:i}"
-		"en"		"You Damge {1} - {2} DMG."
-		"pt"		"Danos que você causou {1} - {2} DMG."
-	}
-	"You haven t done any damage"
-	{
-		"en"		"You haven't done any damage to the zombies this round."
-		"pt"		"Você não causou danos aos zumbis nesta rodada."
 	}
 	"Boshud Debugger Enabled"
 	{
@@ -142,9 +75,9 @@
 		"en"		" {lightred}[{lightgreen}Boss_HUD{lightred}]{default} BosHud's Debugger mode was: {lightred}Desabled{default}."
 		"pt"		" {lightred}[{lightgreen}Boss_HUD{lightred}]{default} O modo Debugger do BosHud foi: {lightred}Desabilitado{default}."
 	}
-	"Cancel"
+	"Cookie_Menu"
 	{
-		"en"		" {lightred}[{lightgreen}Boss_HUD{lightred}]{default} Canceled Action."
-		"pt"		" {lightred}[{lightgreen}Boss_HUD{lightred}]{default} Ação Cancelada."
+		"en"		"Boss Hud"
+		"pt"		"Boss Hud"
 	}
 }
