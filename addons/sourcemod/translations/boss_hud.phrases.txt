@@ -3,17 +3,17 @@
 	"Boss Hud Title"
 	{
 		"#format"		"{1:s},{2:s},{3:s},{4:s},{5:s}"
-		"en"		"Boss Hud Anubis\n \nBoss Hud Damage: [{1}]\nBrekable Hud: [{2}]\nBoss Hit Marker: [{3}]\nHit Sounds: [{4}]\nZombies Hud Hits: [{5}]\n "
-		"pt"		"Boss Hud Anubis\n \nDanos Boss na Tela: [{1}]\nQuebra de Itens na Tela: [{2}]\nAuxílio de mira: [{3}]\nSons dos Hits: [{4}]\nMostar Danos aõs Zuimbis: [{5}]\n "
+		"en"		"Boss Hud Menu\n \nBoss Hud Damage: [{1}]\nBreakable Hud: [{2}]\nBoss Hit Marker: [{3}]\nHit Sounds: [{4}]\nZombies Hud Hits: [{5}]\n "
+		"pt"		"Boss Hud Menu\n \nDanos Boss na Tela: [{1}]\nQuebra de Itens na Tela: [{2}]\nAuxílio de mira: [{3}]\nSons dos Hits: [{4}]\nMostar Danos aõs Zuimbis: [{5}]\n "
 	}
 	"Boss Hud Damage"
 	{
 		"en"		"Boss Hud Damage"
 		"pt"		"Danos Boss na Tela"
 	}
-	"Brekable Hud"
+	"Breakable Hud"
 	{
-		"en"		"Brekable Hud"
+		"en"		"Breakable Hud"
 		"pt"		"Quebra de Itens na Tela"
 	}
 	"Boss Hit Marker"
@@ -36,9 +36,9 @@
 		"en"		"Enabled"
 		"pt"		"Ativado"
 	}
-	"Desabled"
+	"Disabled"
 	{
-		"en"		"Desabled"
+		"en"		"Disabled"
 		"pt"		"Desativado"
 	}
 	"Health added"
@@ -65,15 +65,15 @@
 		"en"		" {lightred}[{lightgreen}Boss_HUD{lightred}]{default} The entity (ID {lightgreen}{1}{default}) is invalid, use {lightgreen}!hpdebug {default}to obtain the {lightgreen}HamerId {default}of the Entities."
 		"pt"		" {lightred}[{lightgreen}Boss_HUD{lightred}]{default} A entidade (ID {lightgreen}{1}{default}) é inválida , use  {lightgreen}!hpdebug {default}para obter o {lightgreen}HamerId {default}das Entidades."
 	}
-	"Boshud Debugger Enabled"
+	"Bosshud Debugger Enabled"
 	{
-		"en"		" {lightred}[{lightgreen}Boss_HUD{lightred}]{default} BosHud's Debugger mode was: {lightgreen}Enabled{default}."
-		"pt"		" {lightred}[{lightgreen}Boss_HUD{lightred}]{default} O modo Debugger do BosHud foi: {lightgreen}Habilitado{default}."
+		"en"		" {lightred}[{lightgreen}Boss_HUD{lightred}]{default} BossHud's Debugger mode was: {lightgreen}Enabled{default}."
+		"pt"		" {lightred}[{lightgreen}Boss_HUD{lightred}]{default} O modo Debugger do BossHud foi: {lightgreen}Habilitado{default}."
 	}
-	"Boshud Debugger Desabled"
+	"Bosshud Debugger Disabled"
 	{
-		"en"		" {lightred}[{lightgreen}Boss_HUD{lightred}]{default} BosHud's Debugger mode was: {lightred}Desabled{default}."
-		"pt"		" {lightred}[{lightgreen}Boss_HUD{lightred}]{default} O modo Debugger do BosHud foi: {lightred}Desabilitado{default}."
+		"en"		" {lightred}[{lightgreen}Boss_HUD{lightred}]{default} BossHud's Debugger mode was: {lightred}Disabled{default}."
+		"pt"		" {lightred}[{lightgreen}Boss_HUD{lightred}]{default} O modo Debugger do BossHud foi: {lightred}Desabilitado{default}."
 	}
 	"Cookie_Menu"
 	{
