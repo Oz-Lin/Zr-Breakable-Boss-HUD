@@ -76,7 +76,7 @@ ConVar g_cBossHud = null;
 ConVar g_cVUpdateTime = null;
 ConVar g_cVUTopRankTime = null;
 
-bool g_bBoshudDebugger[MAXPLAYERS+1] = {false, ...};
+bool g_bBosshudDebugger[MAXPLAYERS+1] = {false, ...};
 bool g_bBossHud = true;
 bool g_bBossDestroy = false;
 
@@ -196,6 +196,7 @@ public Action Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	Top_Rank_Reset();
 	g_bBossDestroy = false;
 	ReadFileBoss();
+	return Plugin_Continue;
 }
 
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
@@ -318,15 +319,15 @@ public Action Command_BhudDebug(int client, int argc)
 {
 	if(IsValidClient(client) && IsValidGenericAdmin(client))
 	{
-		if (g_bBoshudDebugger[client])
+		if (g_bBosshudDebugger[client])
 		{
-			g_bBoshudDebugger[client] = false;
-			CPrintToChat(client, "%t", "Boshud Debugger Desabled");
+			g_bBosshudDebugger[client] = false;
+			CPrintToChat(client, "%t", "Bosshud Debugger Disabled");
 		}
 		else
 		{
-			g_bBoshudDebugger[client] = true;
-			CPrintToChat(client, "%t", "Boshud Debugger Enabled");
+			g_bBosshudDebugger[client] = true;
+			CPrintToChat(client, "%t", "Bosshud Debugger Enabled");
 		}
 	}
 	else
@@ -357,7 +358,7 @@ void MenuClientBhud(int client)
 
 	char m_sTitle[MENU_LINE_TITLE_LENGTH];
 	char m_sBoss_Hud[MENU_LINE_REG_LENGTH];
-	char m_sBrekable_Hud[MENU_LINE_REG_LENGTH];
+	char m_sBreakable_Hud[MENU_LINE_REG_LENGTH];
 	char m_sBoss_Hud_Type[MENU_LINE_REG_LENGTH];
 	char m_sBoss_Hit_Marker[MENU_LINE_REG_LENGTH];
 	char m_sBoss_Top_Rank[MENU_LINE_REG_LENGTH];
@@ -365,19 +366,19 @@ void MenuClientBhud(int client)
 
 	Format(m_sTitle ,sizeof(m_sTitle) ,"%t", "Boss Hud Title");
 	if (BossHudClientEnum[client].e_bHpBhEnable) Format(m_sBoss_Hud ,sizeof(m_sBoss_Hud) ,"%t: [%t]" ,"Boss Hud Damage" ,"Enabled");
-	else Format(m_sBoss_Hud ,sizeof(m_sBoss_Hud) ,"%t: [%t]" ,"Boss Hud Damage" ,"Desabled");
+	else Format(m_sBoss_Hud ,sizeof(m_sBoss_Hud) ,"%t: [%t]" ,"Boss Hud Damage" ,"Disabled");
 
-	if (BossHudClientEnum[client].e_bHpBrEnable) Format(m_sBrekable_Hud ,sizeof(m_sBrekable_Hud) ,"%t: [%t]" ,"Brekable Hud" ,"Enabled");
-	else Format(m_sBrekable_Hud ,sizeof(m_sBrekable_Hud) ,"%t: [%t]" ,"Brekable Hud" ,"Desabled");
+	if (BossHudClientEnum[client].e_bHpBrEnable) Format(m_sBreakable_Hud ,sizeof(m_sBreakable_Hud) ,"%t: [%t]" ,"Breakable Hud" ,"Enabled");
+	else Format(m_sBreakable_Hud ,sizeof(m_sBreakable_Hud) ,"%t: [%t]" ,"Breakable Hud" ,"Disabled");
 
 	if (BossHudClientEnum[client].e_bHudType) Format(m_sBoss_Hud_Type ,sizeof(m_sBoss_Hud_Type) ,"%t: [%t]" ,"Boss Hud Type" ,"Center");
 	else Format(m_sBoss_Hud_Type ,sizeof(m_sBoss_Hud_Type) ,"%t: [%t]" ,"Boss Hud Type" ,"Display Hud");
 
 	if (BossHudClientEnum[client].e_bHitmEnable) Format(m_sBoss_Hit_Marker ,sizeof(m_sBoss_Hit_Marker) ,"%t: [%t]" ,"Boss Hit Marker" ,"Enabled");
-	else Format(m_sBoss_Hit_Marker ,sizeof(m_sBoss_Hit_Marker) ,"%t: [%t]" ,"Boss Hit Marker" ,"Desabled");
+	else Format(m_sBoss_Hit_Marker ,sizeof(m_sBoss_Hit_Marker) ,"%t: [%t]" ,"Boss Hit Marker" ,"Disabled");
 
 	if (BossHudClientEnum[client].e_bTopdEnable) Format(m_sBoss_Top_Rank ,sizeof(m_sBoss_Top_Rank) ,"%t: [%t]", "Boss Top Rank" ,"Enabled");
-	else Format(m_sBoss_Top_Rank ,sizeof(m_sBoss_Top_Rank) ,"%t: [%t]" ,"Boss Top Rank" ,"Desabled");
+	else Format(m_sBoss_Top_Rank ,sizeof(m_sBoss_Top_Rank) ,"%t: [%t]" ,"Boss Top Rank" ,"Disabled");
 
 	Format(m_sBoss_Hud_Position ,sizeof(m_sBoss_Hud_Position) ,"%t: [ %s ]", "Boss Hud Position" ,BossHudClientEnum[client].e_sHudPasition);
 
@@ -387,7 +388,7 @@ void MenuClientBhud(int client)
 	MenuBhud.SetTitle(m_sTitle);
 
 	MenuBhud.AddItem("Boss_Hud_Enable", m_sBoss_Hud);
-	MenuBhud.AddItem("Brekable_Hud_Enable", m_sBrekable_Hud);
+	MenuBhud.AddItem("Breakable_Hud_Enable", m_sBreakable_Hud);
 	MenuBhud.AddItem("Boss_Hud_Type", m_sBoss_Hud_Type);
 	MenuBhud.AddItem("Boss_Hit_Marker_Enable", m_sBoss_Hit_Marker);
 	MenuBhud.AddItem("Boss_Top_Rank_Enable", m_sBoss_Top_Rank);
@@ -413,7 +414,7 @@ public int MenuClientBhudCallBack(Handle MenuBhud, MenuAction action, int client
 			BossHudCookiesSetBool(client, g_hHpBhEnable, BossHudClientEnum[client].e_bHpBhEnable);
 			MenuClientBhud(client);
 		}
-		else if (StrEqual(sItem[0], "Brekable_Hud_Enable"))
+		else if (StrEqual(sItem[0], "Breakable_Hud_Enable"))
 		{
 			BossHudClientEnum[client].e_bHpBrEnable = !BossHudClientEnum[client].e_bHpBrEnable;
 			BossHudCookiesSetBool(client, g_hHpBrEnable, BossHudClientEnum[client].e_bHpBrEnable);
@@ -526,7 +527,7 @@ void MenuAdminBhud(int client, bool MenuAdmin2 = false, char[] ItemMenu = "")
 		{
 			Format(m_sTitle, sizeof(m_sTitle), "%t", "Boss Hud Title Admin Enabled", c_sTemp, KvGetNum(g_hkvbosshpAdmin, "hammerid"), KvGetNum(g_hkvbosshpAdmin, "HPvalue_max"));
 			MenuBhudAdmin.SetTitle(m_sTitle);
-			Format(c_sMenu2_Boss, sizeof(c_sMenu2_Boss), "%t", "Desable");
+			Format(c_sMenu2_Boss, sizeof(c_sMenu2_Boss), "%t", "Disable");
 			MenuBhudAdmin.AddItem("To_Menu2_Disable", c_sMenu2_Boss);
 		}
 		MenuBhudAdmin.ExitBackButton = true;
@@ -549,7 +550,7 @@ void MenuAdminBhud(int client, bool MenuAdmin2 = false, char[] ItemMenu = "")
 				KvGetString(g_hkvbosshpAdmin, "m_iname", sBuffer_temp, sizeof(sBuffer_temp), "");
 				if (KvGetNum(g_hkvbosshpAdmin, "enabled") <= 0)
 				{
-					Format(sBuffer_temp, sizeof(sBuffer_temp), "[%t] %s", "Desabled", sBuffer_temp);
+					Format(sBuffer_temp, sizeof(sBuffer_temp), "[%t] %s", "Disabled", sBuffer_temp);
 				}
 				else
 				{
@@ -690,7 +691,7 @@ public void OnHealthChanged(const char[] output, int entity, int activator, floa
 		if(strlen(targetname) == 0) targetname = "No-Name";
 		Format(bossname, sizeof(bossname), "►[%s]◄", targetname);
 
-		if (g_bBoshudDebugger[activator])
+		if (g_bBosshudDebugger[activator])
 		{
 			PrintToChat(activator, " \x04[Boss_HUD] Breakable: \x01%s  \x04HammerID: \x01%d  \x04HP: \x01%d\x04.", targetname, hammerIDi, HPvalue);
 		}
@@ -721,7 +722,7 @@ public void CounterOutValue(const char[] output, int entity, int activator, floa
 		if(strlen(targetname) == 0) targetname = "No-Name";
 		Format(bossname, sizeof(bossname), "►[BOSS %s]◄", targetname);
 
-		if (g_bBoshudDebugger[activator])
+		if (g_bBosshudDebugger[activator])
 		{
 			PrintToChat(activator, " \x04[Boss_HUD] MathCounter: \x01%s  \x04HammerID: \x01%d  \x04HP: \x01%d\x04.", targetname, hammerIDi, HPvalue);
 		}
@@ -774,6 +775,7 @@ public Action OnTakeDamage (int entity, int &attacker, int &inflictor, float &da
 			BossHudDamage(entity, attacker, HPvalue, bossname, hammerID, hammerIDi, b_temp);
 		}
 	}
+	return Plugin_Continue;
 }
 
 void BossHudDamage(int entity, int attacker, int HPvalue, char[] bossname, char[] hammerID, int hammerIDi, bool math_counter = false)
@@ -849,7 +851,7 @@ void BossHudDamage(int entity, int attacker, int HPvalue, char[] bossname, char[
 	}
 }
 
-stock char CreateIcon(int hp)
+stock char[] CreateIcon(int hp)
 {
 	char sText[MAX_TEXT_LENGTH]; // ►[BOSS]◄
 
@@ -927,6 +929,8 @@ public Action UpdateHUD(Handle timer, any client)
 			SendCenterMsg(i, BossHudClientEnum[i].e_sName, BossHudClientEnum[i].e_sTextBar, BossHudClientEnum[i].e_iHPvalue, BossHudClientEnum[i].e_iHPpercent);
 		}
 	}
+
+	return Plugin_Continue;
 }
 
 public Action PrintBossHitRanks()
@@ -1086,6 +1090,7 @@ public Action PrintBossHitRanks()
 		}
 	}
 	Top_Rank_Reset();
+	return Plugin_Continue;
 }
 
 stock void SendCenterMsg(int client, const char[] szName, const char[] sTextBar, int HPvalue, int HPpercent, bool TopHud = false, any...)
