@@ -1,15 +1,16 @@
 # Zr-Breakable-Boss-HUD
 
-* Compiled in version; SourceMod Version: 1.10.0.6492
+* **Now supporting SourceMod Version 1.11!**
 * Sorry for my English.
 
-* Author Anubis.
-* Version = 1.1
+* Author Anubis + Oz-Lin.
+* Version = 1.1b
 
 ### Zr-Breakable-Boss-HUD
 Displays the health / value of any func_breakable or math_counter that you activate.
 Plugin is meant for the ZE gamemode, as it displays the current HP of any boss or breakable that you are shooting, but it can be used in other gamemodes as well.
-File addons\sourcemod\configs\Boss_Hud\mapname.txt
+
+BossHud config file `addons\sourcemod\configs\Boss_Hud\mapname.txt` 
 automatically generated !!
 
 ### New
