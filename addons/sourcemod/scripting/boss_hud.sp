@@ -45,7 +45,7 @@
 
 #pragma newdecls required
 
-#define MAX_TEXT_LENGTH	64
+#define MAX_TEXT_LENGTH	128
 #define MENU_LINE_REG_LENGTH 64
 #define MENU_LINE_BIG_LENGTH 128
 #define HUGE_LINE_LENGTH 512
@@ -825,7 +825,7 @@ void BossHudDamage(int entity, int attacker, int HPvalue, char[] bossname, char[
 		int HPpercent = RoundFloat(float(HPvalue)/float(BossHudClientEnum[attacker].e_iHPvalue_Max)*100.0);
 
 		char sTextBar[MAX_TEXT_LENGTH];
-		Format(sTextBar, sizeof(sTextBar), "%s", CreateIcon(HPpercent));
+		Format(sTextBar, sizeof(sTextBar), "%s %i%%", CreateIcon(HPpercent), HPpercent);
 
 		BossHudClientEnum[attacker].e_iHammerID = StringToInt(hammerID);
 		strcopy(BossHudClientEnum[attacker].e_sTextBar, MAX_TEXT_LENGTH, sTextBar);
@@ -920,7 +920,7 @@ public Action UpdateHUD(Handle timer, any client)
 			int HPpercent = RoundFloat(float(HPvalue)/float(BossHudClientEnum[i].e_iHPvalue_Max)*100.0);
 
 			char sTextBar[MAX_TEXT_LENGTH];
-			Format(sTextBar, sizeof(sTextBar), "%s", CreateIcon(HPpercent));
+			Format(sTextBar, sizeof(sTextBar), "%s %i%%", CreateIcon(HPpercent), HPpercent);
 
 			BossHudClientEnum[i].e_iHPpercent = HPpercent;
 			strcopy(BossHudClientEnum[i].e_sTextBar, MAX_TEXT_LENGTH, sTextBar);
